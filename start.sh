@@ -2,7 +2,7 @@
 set -e
 
 echo "Running database migrations..."
-medusa migrations run
+pnpm exec medusa migrations run
 
 echo "Starting Medusa server..."
-exec medusa start
+exec pnpm exec medusa start
