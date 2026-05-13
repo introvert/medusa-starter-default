@@ -34,14 +34,19 @@ ENV PORT="9000"
 
 WORKDIR /app/medusa
 
-RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
+RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3 curl
 
 RUN npm i -g pnpm@9.4.0
 
 COPY --from=builder /app/medusa/.medusa/server .
 
-RUN pnpm install --prod
+# Keep all deps (including ts-node) to match expected runtime environment
+RUN pnpm install --frozen-lockfile
 
 EXPOSE 9000
+
+# Medusa health endpoint is /health not /
+HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 \
+  CMD curl -f http://localhost:${PORT}/health || exit 1
 
 CMD ["pnpm", "start"]
