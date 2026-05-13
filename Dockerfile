@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3 c
 RUN npm i -g pnpm@9.4.0
 
 COPY --from=builder /app/medusa/.medusa/server .
+COPY --from=builder /app/medusa/pnpm-lock.yaml .
 
 # Keep all deps (including ts-node) to match expected runtime environment
 RUN pnpm install --frozen-lockfile
