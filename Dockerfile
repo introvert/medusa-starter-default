@@ -31,6 +31,7 @@ ENV DATABASE_URL=""
 ENV REDIS_URL=""
 ENV STRIPE_API_KEY=""
 ENV PORT="9000"
+ENV MEDUSA_FF_TRANSLATION="true"
 
 WORKDIR /app/medusa
 
@@ -44,10 +45,13 @@ COPY --from=builder /app/medusa/pnpm-lock.yaml .
 # Keep all deps (including ts-node) to match expected runtime environment
 RUN pnpm install --frozen-lockfile
 
+COPY start.sh .
+RUN chmod +x start.sh
+
 EXPOSE 9000
 
 # Medusa health endpoint is /health not /
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 \
   CMD curl -f http://localhost:${PORT}/health || exit 1
 
-CMD ["pnpm", "start"]
+CMD ["./start.sh"]
