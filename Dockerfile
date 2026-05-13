@@ -18,6 +18,7 @@ RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 FROM node:23
 
 # Runtime environment variables — set these via docker run -e or docker-compose environment:
+ENV NODE_ENV="production"
 ENV COOKIE_SECRET=""
 ENV JWT_SECRET=""
 ENV STORE_CORS=""
